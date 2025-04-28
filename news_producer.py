@@ -12,7 +12,7 @@ TOPIC = "news"
 # Kafka Producer 생성 (value는 JSON 직렬화)
 producer = KafkaProducer(
     bootstrap_servers=KAFKA_BROKER,
-    value_serializer=lambda v: json.dumps(v).encode('utf-8')
+    value_serializer=lambda v: json.dumps(v).encode("utf-8"),
 )
 
 RSS_FEED_URL = "https://www.khan.co.kr/rss/rssdata/total_news.xml"
@@ -20,13 +20,13 @@ RSS_FEED_URL = "https://www.khan.co.kr/rss/rssdata/total_news.xml"
 collected_url = []
 
 while True:
-    print('경향신문 RSS 피드를 확인하는 중 ...')
+    print("경향신문 RSS 피드를 확인하는 중 ...")
     feed = feedparser.parse(RSS_FEED_URL)
 
     for entry in feed.entries:
         # 중복 확인
         if entry.link not in collected_url:
-            title = entry.get("title", '제목없음')
+            title = entry.get("title", "제목없음")
             writer = clean_writer(entry.get("author", "작성자 없음"))
             write_date = format_date(entry.get("date", "날짜 없음"))
             category = entry.get("category", "카테고리 없음")
@@ -40,12 +40,12 @@ while True:
                 "write_date": write_date if write_date != "날짜 형식 오류" else None,
                 # "category": category,
                 "content": content,
-                "url": url
+                "url": url,
             }
             producer.send(TOPIC, data)
 
             print(title)
-            collected_url.append(url)   # url 저장
+            collected_url.append(url)  # url 저장
 
     producer.flush()
-    time.sleep(600)
+    time.sleep(60)
