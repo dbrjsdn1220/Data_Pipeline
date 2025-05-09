@@ -60,10 +60,12 @@ GRANT USAGE, SELECT, UPDATE ON ALL SEQUENCES IN SCHEMA public TO your_user;
 ### 3. .env 설정 예시
 
 ```env
-DB_USERNAME=<PostgreSQL User>
-DB_PASSWORD=<PostgreSQL Password>
-OPENAI_API_KEY=<YOUR OPEN AI KEY>
-KAFKA_CONNECTOR_PATH=/path/to/flink-sql-connector-kafka-3.3.0-1.20.jar
+conn = psycopg2.connect(
+    host = "localhost",
+    dbname = 'news',
+    user = os.getenv("DB_USERNAME"),
+    password = os.getenv("DB_PASSWORD")
+)
 ```
 
 ### 4. 주요 항목들 추출 방법 (중에 문제 있었던 것만)
